@@ -1,0 +1,59 @@
+2022.2.3
+
+### Added
+
+-   Colour picker now remembers the last 20 used colours for each user.
+-   [DM] Export all campaigns endpoint
+-   [DM] UI export campaign option in room details
+-   [DM] Import campaign support
+    -   Can import older saves (if the migration code is still available (i.e. < 1 year old))
+-   [2022.2.1][server] server config option to enable import/export, defaulting to False
+    -   given the experimental nature, it's better to not enable this by default
+    -   it's strongly recommended to only enable this if you run a private server for the moment
+
+### Changed
+
+-   Add white outline to the door logic (un)lock icons
+-   Door logic can now specify which block settings to toggle
+-   Add double stroke to client viewport
+-   Show campaign loading animation earlier (in dashboard)
+-   Defeat cross now scales better with shape size
+-   Shape badge now scales better with shape size
+-   Show default "no" button in delete/leave campaign prompt
+-   Default location zoom level is now 0.2 instead of 1.0
+-   [server] Added log rotation
+-   [server] Restructure server files
+
+### Fixed
+
+-   Exporting a campaign where there are images that have no specific asset associated with them, would fail
+-   Exporting a campaign was not properly copying the active pan and zoom info for users
+-   ExtraSettings svg section not updating immediately until changing tabs
+-   ExtraSettings remove svg not properly working
+-   ExtraSettings add svg not working for shapes with no prior svg properties
+-   Spawn locations loading wrong
+-   Teleport zones triggering from other floors
+-   Draw tool door permissions not saving
+-   Door logic toggle not immediately updating UI when shape properties are open
+-   Logic init edge cases breaking UI until refresh
+-   Redo logic on resize operation not remembering correct location when it was snapped
+-   Asset Manager correctly updates UI when using browser back/forward buttons
+-   Clear client viewports when changing location
+-   Dashboard navigation headers sometimes being wrongly styled
+-   Modal handling on firefox
+-   Colour picker resetting saturation panel to red when clicking
+-   Colour picker resetting opacity when setting hsv color
+-   Drawtool trying to add shape creation operation to undo stack when the shape was not valid
+-   Points modified by the polygon edit UI are not snappable until a refresh
+-   Logic Permission selector showing error in edgecase
+-   Asset socket was not cleaning up past connections
+-   Auras that are light sources, no longer appear as a black circle of doom when FOW is not turned on
+-   Undo/Redo not persisting to server for movement and rotation
+-   [server] Admin client was not built in docker
+-   [2022.2.1] Note export failing
+-   [2022.2.1] Markers not being exported
+-   [2022.2.2] Auras giving light when light source is turned off
+-   [2022.2.2] Ghost initiative entries showing up as ? that cannot be removed
+-   [2022.2.2] Database lock errors while importing during load
+-   [2022.2.2][server] Server not being able to start due to ModuleNotFoundError
+-   [2022.2.3][server] Windows executable builds not using the correct directory for certain files (e.g. config/assets)

@@ -1,0 +1,145 @@
+version: 2.1
+
+orbs:
+    windows: circleci/windows@2.4.0
+
+jobs:
+    build-client:
+        docker:
+            - image: circleci/node:12
+
+        working_directory: ~/PlanarAlly/client
+
+        steps:
+            - checkout:
+                  path: ~/PlanarAlly
+
+            - restore_cache:
+                  key: npm-{{ checksum "package-lock.json" }}
+                  name: Restoring npm cache
+
+            - run:
+                  name: npm install
+                  command: npm i
+
+            - save_cache:
+                  key: npm-{{ checksum "package-lock.json" }}
+                  paths:
+                      - ./node-modules
+
+            - run:
+                  name: Build artifacts
+                  command: npm run build
+
+            - persist_to_workspace:
+                  root: ../
+                  paths:
+                      - server
+
+    release-server:
+        docker:
+            - image: cibuilds/github:0.13.0
+
+        working_directory: ~/PlanarAlly
+
+        steps:
+            - attach_workspace:
+                  at: ./
+
+            - run:
+                  name: Create tmp folder
+                  command: mkdir /tmp/archives
+
+            - run:
+                  name: Zip artifacts
+                  command: |
+                      VERSION=$(head -1 server/VERSION)
+                      zip -r /tmp/archives/planarally-bin-${VERSION}.zip server/*
+
+            - run:
+                  name: Gunzip artifacts
+                  command: |
+                      VERSION=$(head -1 server/VERSION)
+                      tar -czf /tmp/archives/planarally-bin-${VERSION}.tar.gz server/*
+
+            - run:
+                  name: "Publish release on github"
+                  command: |
+                      VERSION=$(head -1 server/VERSION)
+                      ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -replace ${VERSION} /tmp/archives
+
+    build-windows:
+        executor: windows/default
+
+        working_directory: ~/PlanarAlly/server
+
+        steps:
+            - attach_workspace:
+                  at: ../
+
+            - run:
+                  name: Create archives folder
+                  command: mkdir ~/archives
+
+            - run:
+                  name: Create dist folder
+                  command: mkdir ~/dist
+
+            - run:
+                  name: Upgrade pip
+                  command: python -m pip install --upgrade pip
+
+            - run:
+                  name: Install python dependencies
+                  command: python -m pip install -r requirements.txt
+
+            - run:
+                  name: Install pyinstaller
+                  command: python -m pip install pyinstaller
+
+            - run:
+                  name: Run pyinstaller
+                  command: pyinstaller --clean -y --dist ~/dist/ PA.spec
+
+            - run:
+                  name: Zip artifacts
+                  command: |
+                      $VERSION=$(Get-Content -TotalCount 1 VERSION)
+                      Compress-Archive -Path C:\Users\circleci\dist -DestinationPath C:\Users\circleci\archives\planarally-windows-${VERSION}.zip
+
+            - run:
+                  name: Install ghr
+                  command: go get -u github.com/tcnksm/ghr
+
+            - run:
+                  name: Publish release on github
+                  command: |
+                      $VERSION=$(Get-Content -TotalCount 1 VERSION)
+                      C:\Users\circleci\go\bin\ghr.exe -t $env:GITHUB_TOKEN -u $env:CIRCLE_PROJECT_USERNAME -r $env:CIRCLE_PROJECT_REPONAME -c $env:CIRCLE_SHA1 -replace $VERSION C:\Users\circleci\archives
+
+workflows:
+    version: 2
+    build:
+        jobs:
+            - build-windows:
+                  requires:
+                      - build-client
+                  filters:
+                      branches:
+                          ignore: /.*/
+                      tags:
+                          only: /^\d+\.\d+\.\d+[-a-zA-Z0-9]*$/
+            - build-client:
+                  filters:
+                      branches:
+                          ignore: /.*/
+                      tags:
+                          only: /^\d+\.\d+\.\d+[-a-zA-Z0-9]*$/
+            - release-server:
+                  requires:
+                      - build-client
+                  filters:
+                      branches:
+                          ignore: /.*/
+                      tags:
+                          only: /^\d+\.\d+\.\d+[-a-zA-Z0-9]*$/

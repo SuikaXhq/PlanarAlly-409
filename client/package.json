@@ -1,0 +1,73 @@
+{
+    "name": "client",
+    "version": "2022.2.3",
+    "private": true,
+    "scripts": {
+        "dev": "vite",
+        "serve": "vite preview",
+        "clean": "rimraf ../server/static/vite/",
+        "build:prep": "npm run clean",
+        "build": "npm run build:prep && vite build && mv ../server/index.html ../server/templates/index.html",
+        "build:ci": "npm run build:prep && npm run vue-tsc && vite build --outDir dist",
+        "lint": "eslint src --fix --ext .ts,.vue",
+        "lint:ci": "CI=1 eslint src --no-fix --ext .ts,.vue",
+        "vue-tsc": "vue-tsc --noEmit",
+        "tsc": "tsc --noEmit",
+        "test": "vitest",
+        "coverage": "vitest run --coverage"
+    },
+    "dependencies": {
+        "@babylonjs/materials": "^4.2.2",
+        "@fortawesome/fontawesome-svg-core": "^6.1.1",
+        "@fortawesome/free-brands-svg-icons": "^6.1.1",
+        "@fortawesome/free-regular-svg-icons": "^6.1.1",
+        "@fortawesome/free-solid-svg-icons": "^6.1.1",
+        "@fortawesome/vue-fontawesome": "^3.0.0-5",
+        "@planarally/dice": "^0.4.0-alpha.7",
+        "core-js": "^3.22.8",
+        "path-data-polyfill": "^1.0.3",
+        "socket.io-client": "^4.5.1",
+        "swiper": "^7.3.1",
+        "tinycolor2": "^1.4.2",
+        "vue": "^3.2.36",
+        "vue-i18n": "^9.1.10",
+        "vue-router": "^4.0.15",
+        "vue-toastification": "^2.0.0-rc.5",
+        "vue3-markdown-it": "^1.0.10",
+        "vuedraggable": "4.0.3"
+    },
+    "devDependencies": {
+        "@babylonjs/core": "^4.2.2",
+        "@intlify/vite-plugin-vue-i18n": "^3.4.0",
+        "@types/lodash": "^4.14.182",
+        "@types/swiper": "^5.4.3",
+        "@types/tinycolor2": "^1.4.3",
+        "@typescript-eslint/eslint-plugin": "^5.27.0",
+        "@typescript-eslint/parser": "^5.27.0",
+        "@vitejs/plugin-vue": "^2.3.3",
+        "c8": "^7.11.3",
+        "eslint": "^8.16.0",
+        "eslint-import-resolver-typescript": "^2.7.1",
+        "eslint-plugin-import": "^2.26.0",
+        "eslint-plugin-prettier": "^4.0.0",
+        "eslint-plugin-vue": "^9.1.0",
+        "happy-dom": "^2.53.0",
+        "prettier": "^2.6.2",
+        "rimraf": "^3.0.2",
+        "rollup-plugin-visualizer": "^5.6.0",
+        "sass": "^1.52.1",
+        "sass-loader": "^13.0.0",
+        "typescript": "^4.6.3",
+        "upath": "^2.0.1",
+        "vite": "^2.9.9",
+        "vitest": "^0.13.1",
+        "vue-tsc": "^0.35.2"
+    },
+    "madge": {
+        "detectiveOptions": {
+            "ts": {
+                "skipTypeImports": true
+            }
+        }
+    }
+}
