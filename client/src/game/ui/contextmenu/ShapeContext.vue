@@ -262,7 +262,40 @@ async function saveTemplate(): Promise<void> {
             customButton: t("game.ui.templates.create_new"),
         });
         if (choice === undefined) return;
-        assetOptions.templates[choice[0]] = toTemplate(shape.asDict());
+        assetOptions.templates[choice as unknown as string] = toTemplate(shape.asDict());
+        sendAssetOptions(shape.assetId, assetOptions);
+    } catch {
+        // no-op ; action cancelled
+    }
+}
+
+async function deleteTemplate(): Promise<void> {
+    const shape = selectionState.get({ includeComposites: false })[0];
+
+    let assetOptions: AssetOptions = {
+        version: "0",
+        shape: shape.type,
+        templates: { default: {} },
+    };
+    if (shape.assetId !== undefined) {
+        const response = await requestAssetOptions(shape.assetId);
+        if (response.success && response.options) assetOptions = response.options;
+    } else {
+        console.warn("Templates are currently only supported for shapes with existing asset relations.");
+        return;
+    }
+    let template_keys = Object.keys(assetOptions.templates);
+    var idx = 0;
+    for (; idx<template_keys.length; idx++) {
+        if (template_keys[idx] == "default") break;
+    }
+    template_keys.splice(idx, 1);
+    try {
+        const choice = await modals.selectionBox(t("game.ui.templates.delete"), template_keys, {
+            defaultButton: t("game.ui.templates.delete"),
+        });
+        if (choice === undefined) return;
+        delete assetOptions.templates[choice as unknown as string]
         sendAssetOptions(shape.assetId, assetOptions);
     } catch {
         // no-op ; action cancelled
@@ -399,6 +432,9 @@ const floors = toRef(floorState, "floors");
             <li @click="saveTemplate" v-if="!selectionIncludesSpawnToken && isDm && canBeSaved">
                 {{ t("game.ui.templates.save") }}
             </li>
+            <li @click="deleteTemplate" v-if="!selectionIncludesSpawnToken && isDm && canBeSaved">
+                {{ t("game.ui.templates.delete") }}
+            </li>
         </template>
         <template v-else>
             <li>
@@ -423,8 +459,6 @@ const floors = toRef(floorState, "floors");
 <style scoped lang="scss">
 .ContextMenu ul {
     border: 1px solid #82c8a0;
-    width: -moz-fit-content;
-    width: fit-content;
 
     li {
         border-bottom: 1px solid #82c8a0;

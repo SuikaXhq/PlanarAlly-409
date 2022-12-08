@@ -87,7 +87,7 @@ class SelectTool extends Tool implements ISelectTool {
 
     // REACTIVE PROPERTIES
     hasSelection = ref(false);
-    showRuler = ref(false);
+    showRuler = ref(true);
 
     polygonUiLeft = ref("0px");
     polygonUiTop = ref("0px");

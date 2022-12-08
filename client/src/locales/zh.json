@@ -338,7 +338,8 @@
                 "choose": "选择模板",
                 "save": "保存模板",
                 "overwrite": "覆盖",
-                "create_new": "创建新模板"
+                "create_new": "创建新模板",
+                "delete": "删除模版"
             },
             "tools": {
                 "CreateTokenModal": {

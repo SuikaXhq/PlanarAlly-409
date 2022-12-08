@@ -50,7 +50,7 @@ const SSC = ShapeSettingCategory;
     <PanelModal v-model:visible="visible" :categories="categoryNames">
         <template v-slot:title>{{ t("game.ui.selection.edit_dialog.dialog.edit_asset") }}</template>
         <template v-slot:default="{ selection }">
-            <div v-if="hasShape" style="display: flex; flex-direction: column">
+            <div v-if="hasShape" style="display: flex; flex-direction: column;">
                 <PropertySettings v-show="selection === SSC.Properties" />
                 <TrackerSettings :activeSelection="selection === SSC.Trackers" />
                 <AccessSettings :activeSelection="selection === SSC.Access" />

@@ -36,14 +36,16 @@ onMounted(() => {
 });
 
 function mouseDown(): void {
-    active = true;
+    // active = true;
 }
 
 function mouseUp(): void {
     if (active) {
         emit("change", toDegrees(radianAngle.value));
+        active = false;
+    } else {
+        active = true;
     }
-    active = false;
 }
 
 function syncDegreeAngle(): void {
@@ -71,7 +73,7 @@ function mouseMove(event: MouseEvent): void {
             @mousedown="mouseDown"
             @mouseup="mouseUp"
             @mousemove="mouseMove"
-            @mouseleave="mouseUp"
+            @mouseleave=""
         >
             <div class="slider" :style="{ left: `${left}px`, top: `${top}px` }"></div>
         </div>

@@ -44,7 +44,7 @@ const unitSize = computed({
         return settingsStore.getLocationOptions("unitSize", location.value);
     },
     set(unitSize: number) {
-        if (unitSize >= 1) settingsStore.setUnitSize(unitSize, location.value, true);
+        if (unitSize > 0) settingsStore.setUnitSize(unitSize, location.value, true);
     },
 });
 

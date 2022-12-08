@@ -93,19 +93,19 @@ function submit(): void {
                     </template>
                 </div>
                 <div class="button" @click="submit">{{ defaultButton }}</div>
-                <template v-if="customButton.length > 0">
-                    <h4>
-                        <span>
-                            {{ t("common.or").toLocaleUpperCase().toString() }}
-                        </span>
-                    </h4>
-                    <input type="text" class="input" v-model="state.customName" />
-                    <div class="button" @click="create">{{ customButton }}</div>
-                </template>
             </template>
             <template v-else>
                 <div>No possible selection targets found</div>
                 <div class="button" @click="close">Ok</div>
+            </template>
+            <template v-if="customButton.length > 0">
+                <h4>
+                    <span>
+                        {{ t("common.or").toLocaleUpperCase().toString() }}
+                    </span>
+                </h4>
+                <input type="text" class="input" v-model="state.customName" />
+                <div class="button" @click="create">{{ customButton }}</div>
             </template>
         </div>
     </Modal>

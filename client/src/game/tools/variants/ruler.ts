@@ -29,7 +29,7 @@ class RulerTool extends Tool {
     readonly toolTranslation = i18n.global.t("tool.Ruler");
 
     // REACTIVE PROPERTIES
-    showPublic = ref(false);
+    showPublic = ref(true);
 
     // NON REACTIVE PROPERTIES
 

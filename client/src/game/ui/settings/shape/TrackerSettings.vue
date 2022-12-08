@@ -337,6 +337,8 @@ function toggleCompositeAura(shape: LocalId, auraId: AuraId): void {
 <style scoped lang="scss">
 #trackers-panel {
     background-color: white;
+    max-height: 500px;
+    overflow-y: auto;
     min-width: 15vw;
 }
 

@@ -339,6 +339,7 @@ const activeLocation = toRef(settingsStore.state, "activeLocation");
 
 .location-name-label {
     flex-grow: 2;
+    min-width: 5vw;
 }
 
 .location-settings-icon {
